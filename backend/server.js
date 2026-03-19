@@ -15,6 +15,11 @@ app.use("/api/auth", authroute);
 app.use('/api/job',jobroute)
 app.use('/api/application',appl)
 
+app.use((err, req, res, next) => {
+  console.error("Global Error Handler:", err);
+  res.status(500).json({ error: err.message || JSON.stringify(err) || "Unknown error" });
+});
+
 app.listen(5000, () => {
   console.log("Server running on port 5000");
   connectToDatabase();
