@@ -1,10 +1,10 @@
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import { connectToDatabase } from "./utils/dbutils.js";
-import authroute from './route/authroute.js'
-import jobroute from './route/jobroute.js'
-import appl from './route/applicationroute.js'
+import { connectToDatabase } from "./src/utils/dbutils.js";
+import authroute from './src/route/authroute.js'
+import jobroute from './src/route/jobroute.js'
+import appl from './src/route/applicationroute.js'
 
 dotenv.config();
 
