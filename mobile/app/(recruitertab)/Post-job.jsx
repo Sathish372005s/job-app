@@ -13,7 +13,7 @@ const Postjob = () => {
     description: "",
     location: "",
     salary: "",
-    type: "",
+    jobtype: "",
     experience: "",
     skills: [],
     company: "",
@@ -23,14 +23,14 @@ const Postjob = () => {
   const handlePostJob=async()=>{
     console.log(jobdata);
     
-    const res=await createjob(jobdata.title,jobdata.description,jobdata.location,jobdata.salary,jobdata.type,jobdata.experience,jobdata.skills,jobdata.company,jobdata.status)
+    const res=await createjob(jobdata.title,jobdata.description,jobdata.location,jobdata.salary,jobdata.jobtype,jobdata.experience,jobdata.skills,jobdata.company,jobdata.status)
     if(res.success){
       setJobdata({
         title: "",
-        description: "",
+        description: "",  
         location: "",
         salary: "",
-        type: "",
+        jobtype: "",
         experience: "",
         skills: [],
         company: "",
@@ -114,7 +114,7 @@ const Postjob = () => {
           {renderInput('document-text-outline', 'Job Description', 'description', 2)}
           {renderInput('location-outline', 'Location', 'location', 3)}
           {renderInput('cash-outline', 'Salary (e.g., 50000)', 'salary', 4)}
-          {renderInput('time-outline', 'Job Type (e.g., Full-time)', 'type', 5)}
+          {renderInput('time-outline', 'Job Type (e.g., Full-time)', 'jobtype', 5)}
           {renderInput('star-outline', 'Experience Required', 'experience', 6)}
           
           <Animated.View entering={FadeInDown.delay(700).springify()} style={{ width: '100%' }}>

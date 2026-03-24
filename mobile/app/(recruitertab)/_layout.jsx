@@ -14,8 +14,9 @@ export default function RecruiterTabLayout() {
                 borderTopWidth: 1,
                 borderTopColor: COLORS.border,
                 paddingBottom: Platform.OS === 'ios' ? 20 : 10,
-                height: Platform.OS === 'ios' ? 85 : 70,
+                height: Platform.OS === 'ios' ? 85 : 80,
                 paddingTop: 10,
+                borderTopColor:COLORS.primary,
             },
             sceneStyle: { backgroundColor: COLORS.background }
         }}>

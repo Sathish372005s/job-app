@@ -3,17 +3,20 @@ import Job from "../models/job.js";
 
 export const createjob = async(req,res) => {
     try {
-        const {title,description,salary,location,company,requirements} = req.body;
-        if(!title || !description || !salary || !location || !company || !requirements){
+        const {title,description,salary,location,company,jobtype,skills,experience,status} = req.body;
+        if(!title || !description || !salary || !location || !company || !skills){
             return res.status(400).json({message:"All fields required"});
         }
         const job = await Job.create({
             title,
             description,
-            salary,
+            salary: Number(salary) || 0,
             location,
             company,
-            requirements,
+            jobType: jobtype || "Full-time",
+            skillsRequired: skills,
+            experience: Number(experience) || 0,
+            status: status || "open",
             postedBy:req.user._id
         })
         console.log(job);

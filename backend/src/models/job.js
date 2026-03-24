@@ -18,6 +18,10 @@ const jobSchema = new mongoose.Schema(
       enum: ["Full-time", "Part-time", "Contract", "Temporary", "Internship"],
       default: "Full-time",
     },
+    
+    experience: { type: Number, default: 0 },
+    
+    status: { type: String, enum: ["open", "closed"], default: "open" },
 
     postedBy: {
       type: mongoose.Schema.Types.ObjectId,
