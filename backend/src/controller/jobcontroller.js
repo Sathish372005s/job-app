@@ -119,3 +119,14 @@ export const deletejob = async(req,res) => {
         res.status(500).json({message:error.message});
     }
 }
+
+export const getjobbyrecruiter = async(req,res) => {
+    try {
+        const {id} = req.params;
+        const jobs = await Job.find({postedBy:id}).populate("postedBy","name email").sort({createdAt:-1});
+        return res.status(200).json({message:"Jobs fetched successfully",jobs});
+    } catch (error) {
+        console.log("error in getjobbyrecruiter",error);
+        res.status(500).json({message:error.message});
+    }
+}

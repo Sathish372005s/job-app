@@ -22,7 +22,7 @@ const Postjob = () => {
   const {createjob,loading}=useRecruiterStore()
   const handlePostJob=async()=>{
     console.log(jobdata);
-    const res=await createjob(jobdata.title,jobdata.description,jobdata.location,jobdata.salary,jobdata.jobtype,jobdata.experience,jobdata.skills,jobdata.company,jobdata.status)
+    const res=await createjob(jobdata.title.trim(), jobdata.description.trim(), jobdata.location.trim(), jobdata.salary.trim(), jobdata.jobtype.trim(), jobdata.experience.trim(), jobdata.skills, jobdata.company.trim(), jobdata.status)
     console.log(res);
     if(res.success){
       setJobdata({
