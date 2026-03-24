@@ -1,5 +1,5 @@
 import express from "express";
-import {createjob,getjobbyid,grtalljobs,deletejob,jobfilter} from "../controller/jobcontroller.js";
+import {createjob,getjobbyid,grtalljobs,deletejob,jobfilter,getjobbyrecruiter} from "../controller/jobcontroller.js";
 import { protectedroute } from "../middleware/auth.middleware.js";
 import { protectrole } from "../middleware/role.middleware.js";
 
