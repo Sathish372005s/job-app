@@ -28,5 +28,31 @@ export const useRecruiterStore = create((set)=>({
             set({error:errorMsg,loading:false})
             return {success:false,error:errorMsg}
         }
+    },
+
+    deletejob : async(id)=>{
+        try {
+            set({loading:true,error:null})
+            const res=await api.delete(`/job/deletejob/${id}`)
+            console.log("this from recruiter store",res.data)
+            set({loading:false})
+            return {success:true,job:res.data.job}
+        } catch (err) {
+            const errorMsg = err.response?.data?.message || err.message;
+            set({error:errorMsg,loading:false})
+            return {success:false,error:errorMsg}
+        }
+    },
+    logout : async()=>{
+        try {
+            set({loading:true,error:null})
+            await AsyncStorage.removeItem("token")
+            set({loading:false})
+            return {success:true}
+        } catch (err) {
+            const errorMsg = err.response?.data?.message || err.message;
+            set({error:errorMsg,loading:false})
+            return {success:false,error:errorMsg}
+        }
     }
 }))

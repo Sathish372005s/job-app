@@ -82,7 +82,7 @@ export default function Signup() {
       console.log("user",user);
       console.log("token",token);
       console.log("role",role);
-      router.push('/Index');
+      router.push('/(auth)');
     }
     else{
       console.log("Error in signup frontend",result.error);
@@ -141,7 +141,7 @@ export default function Signup() {
           
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
             <Text style={styles.text}>Already have an account? </Text> 
-            <TouchableOpacity onPress={() => router.push('/Index')}>
+            <TouchableOpacity onPress={() => router.push('/(auth)')}>
               <Text style={[styles.buttonText, { color: COLORS.button }]}>Login</Text>
             </TouchableOpacity>
           </View>

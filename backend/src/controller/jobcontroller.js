@@ -30,9 +30,9 @@ export const createjob = async(req,res) => {
 export const grtalljobs = async(req,res) => {
     try {
      const page =parseInt(req.query.page) || 1;
-     const limit = parseInt(req.query.limit) || 5
+     const limit = parseInt(req.query.limit) || 50
      const skip=(page-1)*limit;
-     const jobs =await  job.find().skip(skip).limit(limit).populate("postedBy","name email");
+     const jobs =await  job.find().sort({createdAt: -1}).skip(skip).limit(limit).populate("postedBy","name email");
      const totalbooks =await Job.countDocuments();
      const totalpages = Math.ceil(totalbooks/limit);
      return res.status(200).json({message:"Jobs fetched successfully",jobs,totalbooks,totalpages});  
@@ -124,6 +124,8 @@ export const getjobbyrecruiter = async(req,res) => {
     try {
         const {id} = req.params;
         const jobs = await Job.find({postedBy:id}).populate("postedBy","name email").sort({createdAt:-1});
+        console.log("jobs")
+        console.log(jobs)
         return res.status(200).json({message:"Jobs fetched successfully",jobs});
     } catch (error) {
         console.log("error in getjobbyrecruiter",error);

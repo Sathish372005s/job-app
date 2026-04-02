@@ -28,8 +28,8 @@ export const useAuthStore = create((set) => ({
             set({loading:true,error:null})
             const res=await api.post('/auth/login',{email,password})
             await AsyncStorage.setItem('token',res.data.token)
-            set({user:res.data.user,token:res.data.token,isAuthenticated:true,role:res.data.user.role})
-            return {success:true}
+            set({user:res.data.user,token:res.data.token,isAuthenticated:true,role:res.data.user.role,loading:false})
+            return {success:true, role: res.data.user.role}
         }catch(err){
             const errorMsg = err.response?.data?.message || err.message;
             set({error:errorMsg,loading:false})

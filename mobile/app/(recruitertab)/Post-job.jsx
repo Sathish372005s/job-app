@@ -4,10 +4,12 @@ import COLORS from '../constants/colors'
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated'
 import { Ionicons } from '@expo/vector-icons'
 import { useRecruiterStore } from '../store/recruiterstore'
+import { useRouter } from 'expo-router'
 
 const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
 
 const Postjob = () => {
+  const router=useRouter()
   const [jobdata, setJobdata] = useState({
     title: "",
     description: "",
@@ -19,7 +21,7 @@ const Postjob = () => {
     company: "",
     status: "open"
   });
-  const {createjob,loading}=useRecruiterStore()
+  const {createjob,loading,logout}=useRecruiterStore()
   const handlePostJob=async()=>{
     console.log(jobdata);
     const res=await createjob(jobdata.title.trim(), jobdata.description.trim(), jobdata.location.trim(), jobdata.salary.trim(), jobdata.jobtype.trim(), jobdata.experience.trim(), jobdata.skills, jobdata.company.trim(), jobdata.status)
@@ -37,6 +39,16 @@ const Postjob = () => {
         status: "open"
       })
       alert("Job posted successfully")
+    }
+    else{
+      alert(res.error)
+    }
+  }
+  const handleLogout=async()=>{
+    const res=await logout()
+    if(res.success){
+      alert("Logged out successfully")
+      router.replace("/(auth)")
     }
     else{
       alert(res.error)
@@ -167,6 +179,9 @@ const Postjob = () => {
             {loading ? <ActivityIndicator color={COLORS.buttonText || "#020617"} /> : <Text style={styles.buttonText}>Post Job</Text>}
           </AnimatedTouchableOpacity>
         </View>
+        <TouchableOpacity onPress={handleLogout} style={styles.button}>
+          <Text style={styles.buttonText}>Logout</Text>
+        </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>
   )

@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View ,KeyboardAvoidingView,Platform, TouchableOpacity,TextInput,Image, ActivityIndicator } from 'react-native'
+import { StyleSheet, Text, View ,KeyboardAvoidingView,Platform, TouchableOpacity,TextInput,Image, ActivityIndicator, Alert } from 'react-native'
 import React, { useState } from 'react'
 import COLORS  from '../constants/colors'
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter,Link } from 'expo-router';
-import { useAuthStore } from '../store/authstore';
+import { useAuthStore } from '../store/authstore';  
+
 export default function Index() {
   const [logindata,setLogindata] = useState({
     email:"", 
@@ -11,15 +12,25 @@ export default function Index() {
     securepassword : false
   })
   const router = useRouter();
-  const {login,role,loading}=useAuthStore();
+  const {login,role,loading,user}=useAuthStore();
   const handleLogin=async()=>{
-    const res=await login(logindata.email,logindata.password)
-    if(res.success){
-      if(role==="jobseeker"){
-        router.push('/(usertabs)')
-      }else{
-        router.push('/(recruitertab)')
+    try {
+      const res=await login(logindata.email,logindata.password)
+      console.log("this from login",res)
+      console.log(role)
+      console.log(user)
+      if(res.success){
+        if(res.role==="jobseeker"){
+          router.push('/(usertabs)')
+        }else{
+          router.push('/(recruitertab)')
+        }
+      } else {
+        Alert.alert("Login Failed", res.error || "Invalid credentials");
       }
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Error", "something went wrong")
     }
   }
   return (
