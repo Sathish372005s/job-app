@@ -1,17 +1,36 @@
-import { StyleSheet, Text, View,ScrollView,FlatList,KeyboardAvoidingView,Alert,Platform, ActivityIndicator, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View,ScrollView,TextInput,FlatList,KeyboardAvoidingView,Alert,Platform, ActivityIndicator, TouchableOpacity, Modal } from 'react-native'
 import React from 'react'
 import COLORS from '../constants/colors'
 import { useUserStore } from '../store/userstore'
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
-
 import { useFocusEffect } from 'expo-router';
+import Filter from '../../components/Filter';
+
 
 const Home = () => {
   const {getalljobs}=useUserStore()
   const [jobs,setjobs]=React.useState([])
   const [loading,setloading]=React.useState(false)
+  const [showFilter,setShowFilter]=React.useState(false)
   const [error,seterror]=React.useState(null)
+  const [searchQuery, setSearchQuery] = React.useState({
+    keyword:"",
+    location:"",
+    minSalary:"",
+    maxSalary:"",
+    experience:"",
+    jobType:"",
+    page:1,
+    limit:10,
+    sort:"latest",
+  });
+  const [filteredJobs, setFilteredJobs] = React.useState([]);
+
+  const handleSearch = (e) => {
+    e.preventDefault()
+  };
+
   
   useFocusEffect(
     React.useCallback(()=>{
@@ -46,6 +65,21 @@ const Home = () => {
     >
       <View style={styles.main}>
         <Text style={styles.title}>Available Jobs</Text>
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search jobs..."
+            placeholderTextColor={COLORS.textSecondary}
+            value={searchQuery.keyword}
+            onChangeText={(text) => setSearchQuery({ ...searchQuery, keyword: text })}
+          />
+          <TouchableOpacity onPress={() => setShowFilter(true)}>
+            <Ionicons name="filter-outline" size={20} color={COLORS.background} style={styles.filterIcon}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
+            <Ionicons name="search-outline" size={20} color={COLORS.background} />
+          </TouchableOpacity>
+        </View>
         <FlatList
           data={jobs}
           showsVerticalScrollIndicator={false}
@@ -111,6 +145,13 @@ const Home = () => {
           keyExtractor={(item)=>item._id}
         />
       </View>
+      <Modal visible={showFilter} animationType="slide" transparent={true} onRequestClose={() => setShowFilter(false)}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Filter onClose={() => setShowFilter(false)} />
+          </View>
+        </View>
+      </Modal>
     </KeyboardAvoidingView>
   )
 }
@@ -247,4 +288,49 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textTransform: 'capitalize',
   },
+  searchContainer: {
+    flexDirection: 'row',
+    gap: 10,
+    marginBottom: 20,
+  },
+  searchInput: {
+    flex: 1,
+    backgroundColor: COLORS.card,
+    borderRadius: 12,
+    paddingHorizontal: 15,
+    paddingVertical: 12,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    color: COLORS.textPrimary,
+  },
+  searchButton: {
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: 15,
+    paddingVertical: 12,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  filterIcon: {
+    marginRight: 10,
+    color: COLORS.primary,
+    top:10
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    height: '50%',
+    backgroundColor: COLORS.background,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 10,
+  }
 })
