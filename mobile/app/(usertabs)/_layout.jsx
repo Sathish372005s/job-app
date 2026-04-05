@@ -34,6 +34,10 @@ export default function UserTabLayout() {
                     <Ionicons name="person" size={24} color={color} />
                 )
             }} />
+            <Tabs.Screen name="applyforjob" options={{
+                href: null,
+                title: "Apply for Job"
+            }} />
         </Tabs>
     );
 }

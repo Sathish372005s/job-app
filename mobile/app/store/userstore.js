@@ -2,11 +2,12 @@ import { create } from "zustand";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "../services/api";
 
-export const useUserStore = create((set) => ({    
+export const useUserStore = create((set, get) => ({    
     loading:false,
     error:null,
     jobs:[],
-      filters: {
+    singleid : "",
+    filters: {
         keyword: "",
         location: "",
         minSalary: "",
@@ -17,6 +18,7 @@ export const useUserStore = create((set) => ({
         limit: 5,
         sort: "latest",
     },
+    singlejob : null,
     setfilters :(newfilters) =>{
         set((state)=>({
             filters:{...state.filters,...newfilters}
@@ -37,17 +39,34 @@ export const useUserStore = create((set) => ({
             }
         })
     },
-
-    getalljobs :async()=>{
-        try{
-            set({loading:true,error:null})
-            const res=await api.get('/job/getalljobs')
-            set({loading:false,jobs:res.data.jobs})
-            return {success:true,jobs:res.data.jobs}
-        }catch(err){
-            const errorMsg = err.response?.data?.message || err.message;
-            set({error:errorMsg,loading:false})
-            return {success:false,error:errorMsg}
-        }
+    setsingleid :(id)=>{
+        set({singleid:id})
     },
+    getalljobs :async()=>{
+       try {
+        set({ loading: true, error: null });
+        const { filters } = get();
+        const queryparams=new URLSearchParams(filters).toString();
+        console.log("Query Params:", queryparams);
+        const res = await api.get(`/job/filter?${queryparams}`);
+        set({ jobs: res.data.jobs, loading: false });
+         return { success: true };
+       } catch (error) {
+        set({ error: error.message, loading: false });
+        return { success: false };
+       }
+    },
+    getjobbyid: async(id) =>{
+        try {
+            console.log(id)
+            set({ loading: true, error: null });
+            const res =await api.get(`/job/getbyid/${id}`)
+            set({ singlejob:res.data.job ,loading: false });
+            const {singlejob}=get()
+            console.log(singlejob);
+            return {success:true}
+        } catch (error) {
+            
+        }
+    }
 }))

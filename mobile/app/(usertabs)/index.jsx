@@ -1,53 +1,37 @@
-import { StyleSheet, Text, View,ScrollView,TextInput,FlatList,KeyboardAvoidingView,Alert,Platform, ActivityIndicator, TouchableOpacity, Modal } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View,ScrollView,TextInput,FlatList,KeyboardAvoidingView,Alert,Platform, ActivityIndicator, TouchableOpacity, Modal , Button } from 'react-native'
+import React, { useEffect , useState} from 'react'
 import COLORS from '../constants/colors'
 import { useUserStore } from '../store/userstore'
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from 'expo-router';
 import Filter from '../../components/Filter';
+import Jobcomp from '../../components/ui/Jobcomp';
+
 
 
 const Home = () => {
-  const {getalljobs}=useUserStore()
-  const [jobs,setjobs]=React.useState([])
-  const [loading,setloading]=React.useState(false)
-  const [showFilter,setShowFilter]=React.useState(false)
-  const [error,seterror]=React.useState(null)
-  const [searchQuery, setSearchQuery] = React.useState({
-    keyword:"",
-    location:"",
-    minSalary:"",
-    maxSalary:"",
-    experience:"",
-    jobType:"",
-    page:1,
-    limit:10,
-    sort:"latest",
-  });
-  const [filteredJobs, setFilteredJobs] = React.useState([]);
+ const {
+  getalljobs,
+  jobs,
+  loading,
+  error,
+  filters,
+  setfilters,
+  getjobbyid,
+  singlejob
+} = useUserStore();
 
-  const handleSearch = (e) => {
-    e.preventDefault()
-  };
+const [showFilter, setShowFilter] = React.useState(false);
+const [showSecondModal, setShowSecondModal] = useState(false);
 
-  
-  useFocusEffect(
-    React.useCallback(()=>{
-      const fetchjobs=async()=>{
-        setloading(true)
-        const res=await getalljobs()
-        console.log("this from home res",res)
-        if(res.success){
-          setjobs(res.jobs)
-        }else{
-          seterror(res.error)
-        }
-        setloading(false)
-      }
-      fetchjobs()
-    },[])
-  )
+// ✅ Run only when filters change
+useEffect(() => {
+  getalljobs();
+  console.log(jobs)
+}, [filters]);
+
+
 
   if(loading){
     return (
@@ -66,19 +50,11 @@ const Home = () => {
       <View style={styles.main}>
         <Text style={styles.title}>Available Jobs</Text>
         <View style={styles.searchContainer}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search jobs..."
-            placeholderTextColor={COLORS.textSecondary}
-            value={searchQuery.keyword}
-            onChangeText={(text) => setSearchQuery({ ...searchQuery, keyword: text })}
-          />
+          
           <TouchableOpacity onPress={() => setShowFilter(true)}>
             <Ionicons name="filter-outline" size={20} color={COLORS.background} style={styles.filterIcon}/>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
-            <Ionicons name="search-outline" size={20} color={COLORS.background} />
-          </TouchableOpacity>
+          
         </View>
         <FlatList
           data={jobs}
@@ -87,6 +63,7 @@ const Home = () => {
           renderItem={({item, index})=>{
             const displaySkills = item.skillsRequired?.length ? item.skillsRequired : (item.skills || []);
             return (
+            <TouchableOpacity onPress={()=>{getjobbyid(item._id);setShowSecondModal(true)}}>
             <Animated.View 
               entering={FadeInDown.delay(index * 100).springify().damping(12)}
               style={styles.jobCard}
@@ -124,7 +101,7 @@ const Home = () => {
                 </View>
               </View>
 
-              <Text style={styles.jobDescription} numberOfLines={2}>{item.description}</Text>
+            
              
               {displaySkills.length > 0 && (
                 <View style={styles.skillsContainer}>
@@ -141,14 +118,31 @@ const Home = () => {
                 </TouchableOpacity>
               </View>
             </Animated.View>
+            </TouchableOpacity>
           )}}
           keyExtractor={(item)=>item._id}
+          
         />
+
       </View>
       <Modal visible={showFilter} animationType="slide" transparent={true} onRequestClose={() => setShowFilter(false)}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Filter onClose={() => setShowFilter(false)} />
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        visible={showSecondModal}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => setShowSecondModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text>Second Modal</Text>
+            <Jobcomp />
+            <Button title="Close" onPress={() => setShowSecondModal(false)} />
           </View>
         </View>
       </Modal>
@@ -292,6 +286,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 10,
     marginBottom: 20,
+    justifyContent: 'center',
   },
   searchInput: {
     flex: 1,
@@ -322,7 +317,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
-    height: '50%',
+    height: '80%',
     backgroundColor: COLORS.background,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,

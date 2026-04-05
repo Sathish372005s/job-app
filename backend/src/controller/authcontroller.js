@@ -76,3 +76,23 @@ export const login = async (req, res) => {
 export const logout = (req, res) => {
   res.status(200).json({ message: "Logout successful" });
 };
+
+export const updateProfile = async (req, res) => {
+  try {
+    const {skills, experience ,education,projects} = req.body;
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      { skills, experience, education, projects },
+      { new: true } // return updated data
+    );
+    res.status(200).json({
+      message: "Profile updated successfully",
+      user: updatedUser
+    });
+
+  } catch (error) {
+    console.log("Updating profile for user:", req.user._id);
+    res.status(500).json({ message: error.message });
+    console.error("Error updating profile:", error);
+  }
+}

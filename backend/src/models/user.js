@@ -32,7 +32,22 @@ const userSchema = new mongoose.Schema({
 
   experience: {
     type: String
-  }
+  },
+  education: {
+    type: String
+  },
+  projects: [
+    {
+      name: {
+        type: String,
+        required: true
+      },
+      description: {
+        type: String,
+        required: true
+      }
+    }
+  ]
 
 }, { timestamps: true });
 
