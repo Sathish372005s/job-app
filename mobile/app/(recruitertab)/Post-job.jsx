@@ -1,12 +1,12 @@
 import { StyleSheet, Text, View, KeyboardAvoidingView, Platform, TextInput, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native'
 import React, { useState } from 'react'
 import COLORS from '../constants/colors'
-import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated'
+
 import { Ionicons } from '@expo/vector-icons'
 import { useRecruiterStore } from '../store/recruiterstore'
 import { useRouter } from 'expo-router'
 
-const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
+
 
 const Postjob = () => {
   const router=useRouter()
@@ -79,8 +79,7 @@ const Postjob = () => {
   const renderInput = (icon, placeholder, field, index) => {
     const isFocused = focusedInput === field;
     return (
-      <Animated.View 
-        entering={FadeInDown.delay(index * 100).springify()} 
+      <View 
         style={[styles.inputContainer, isFocused && styles.inputContainerFocused]}
         key={field}
       >
@@ -101,7 +100,7 @@ const Postjob = () => {
           multiline={field === 'description'}
           textAlignVertical={field === 'description' ? 'top' : 'center'}
         />
-      </Animated.View>
+      </View>
     );
   };
 
@@ -116,10 +115,10 @@ const Postjob = () => {
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
       >
-        <Animated.View entering={FadeInDown.duration(800).springify()} style={styles.headerContainer}>
+        <View style={styles.headerContainer}>
           <Text style={styles.welcome}>Post a Job</Text>
           <Text style={styles.subtitle}>Find the perfect candidate</Text>
-        </Animated.View>
+        </View>
 
         <View style={styles.form}>
           {renderInput('briefcase-outline', 'Job Title', 'title', 1)}
@@ -129,7 +128,7 @@ const Postjob = () => {
           {renderInput('time-outline', 'Job Type (e.g., Full-time)', 'jobtype', 5)}
           {renderInput('star-outline', 'Experience Required', 'experience', 6)}
           
-          <Animated.View entering={FadeInDown.delay(700).springify()} style={{ width: '100%' }}>
+          <View style={{ width: '100%' }}>
             <View style={[styles.inputContainer, { marginBottom: jobdata.skills.length > 0 ? 10 : 15 }, focusedInput === 'skills' && styles.inputContainerFocused]}>
               <Ionicons 
                 name="construct-outline" 
@@ -165,19 +164,19 @@ const Postjob = () => {
                 ))}
               </View>
             )}
-          </Animated.View>
+          </View>
 
           {renderInput('business-outline', 'Company Name', 'company', 8)}
 
-          <AnimatedTouchableOpacity 
-            entering={FadeInUp.delay(1000).springify()}
+          <TouchableOpacity 
+
             style={styles.button}
             activeOpacity={0.8}
             onPress={handlePostJob}
             disabled={loading}
           >
             {loading ? <ActivityIndicator color={COLORS.buttonText || "#020617"} /> : <Text style={styles.buttonText}>Post Job</Text>}
-          </AnimatedTouchableOpacity>
+          </TouchableOpacity>
         </View>
         <TouchableOpacity onPress={handleLogout} style={styles.button}>
           <Text style={styles.buttonText}>Logout</Text>

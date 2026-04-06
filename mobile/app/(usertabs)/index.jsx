@@ -2,7 +2,7 @@ import { StyleSheet, Text, View,ScrollView,TextInput,FlatList,KeyboardAvoidingVi
 import React, { useEffect , useState} from 'react'
 import COLORS from '../constants/colors'
 import { useUserStore } from '../store/userstore'
-import Animated, { FadeInDown } from 'react-native-reanimated';
+
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from 'expo-router';
 import Filter from '../../components/Filter';
@@ -28,7 +28,6 @@ const [showSecondModal, setShowSecondModal] = useState(false);
 // ✅ Run only when filters change
 useEffect(() => {
   getalljobs();
-  console.log(jobs)
 }, [filters]);
 
 
@@ -64,8 +63,7 @@ useEffect(() => {
             const displaySkills = item.skillsRequired?.length ? item.skillsRequired : (item.skills || []);
             return (
             <TouchableOpacity onPress={()=>{getjobbyid(item._id);setShowSecondModal(true)}}>
-            <Animated.View 
-              entering={FadeInDown.delay(index * 100).springify().damping(12)}
+            <View 
               style={styles.jobCard}
             >
               <View style={styles.cardHeader}>
@@ -117,7 +115,7 @@ useEffect(() => {
                   <Text style={styles.viewApplicationsButtonText}>Apply Now</Text>
                 </TouchableOpacity>
               </View>
-            </Animated.View>
+            </View>
             </TouchableOpacity>
           )}}
           keyExtractor={(item)=>item._id}

@@ -7,7 +7,7 @@ import { HeaderShownContext } from '@react-navigation/elements'
 export default function _layout() {
   return (
     <SafeAreaView style={{flex: 1}}>
-      <Stack screenOptions={{headerShown:false}} />
+      <Stack screenOptions={{headerShown:false, animation: 'none'}} />
     </SafeAreaView>
   )
 }

@@ -5,7 +5,7 @@ import { useAuthStore } from './store/authstore';
 export default function RootLayout() {
   const {token,role}=useAuthStore();
   return (
-    <Stack screenOptions={{headerShown:false}}>
+    <Stack screenOptions={{headerShown:false, animation: 'none'}}>
       <Stack.Screen name="(usertabs)" />
       <Stack.Screen name="(recruitertab)" />
       <Stack.Screen name="(auth)" />

@@ -64,3 +64,23 @@ export  const updatestatus = async(req,res) =>{
         return res.status(500).json({message:"error in updating status"});
     }
 }
+
+export const getApplicantsByJob = async (req, res) => {
+  try {
+    const { jobId } = req.params;
+
+    const applications = await Application.find({ job: jobId })
+      .populate("applicant", "name email")
+      .populate("job", "title company");
+
+    if (applications.length === 0) {
+      return res.status(404).json({ message: "No applicants found" });
+    }
+
+    return res.status(200).json({ applications });
+  } catch (error) {
+    console.log("Error:", error);
+    return res.status(500).json({ message: "Error fetching applicants" });
+  }
+};
+

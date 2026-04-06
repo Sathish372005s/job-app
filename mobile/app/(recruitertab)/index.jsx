@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { useRecruiterStore } from '../store/recruiterstore'
 import { useAuthStore } from '../store/authstore'
 import COLORS from '../constants/colors'
-import Animated, { FadeInDown } from 'react-native-reanimated';
+
 import { Ionicons } from '@expo/vector-icons';
 
 import { useFocusEffect } from 'expo-router';
@@ -56,8 +56,7 @@ const Home = () => {
           renderItem={({item, index})=>{
             const displaySkills = item.skillsRequired?.length ? item.skillsRequired : (item.skills || []);
             return (
-            <Animated.View 
-              entering={FadeInDown.delay(index * 100).springify().damping(12)}
+            <View 
               style={styles.jobCard}
             >
               <View style={styles.cardHeader}>
@@ -112,7 +111,7 @@ const Home = () => {
                   <Text style={styles.viewApplicationsButtonText}>view applications</Text>
                 </TouchableOpacity>
               </View>
-            </Animated.View>
+            </View>
           )}}
           keyExtractor={(item)=>item._id}
         />
