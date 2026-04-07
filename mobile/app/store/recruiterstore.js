@@ -63,9 +63,27 @@ export const useRecruiterStore = create((set)=>({
             set({loading:true,error:null})
             console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
             const res=await api.get(`/application/getapplicantbyjob/${jobid}`)
-            console.log("applicants in store",res.data)
-            set({applicants:res.data.applicants,loading:false})
+            console.log("Applicants in store:", res.data.applications)
+            set({applicants:res.data.applications,loading:false})
             return {success:true}
+        } catch (error) {
+            const errorMsg = error.response?.data?.message || error.message;
+            set({error:errorMsg,loading:false})
+            return {success:false,error:errorMsg}
+        }
+    },
+    updatestatus: async(id, status)=>{
+        try {
+            set({loading:true,error:null})
+            const res = await api.put(`/application/update/${id}/status`, { status });
+            
+            // Update the locally stored applicants array
+            set((state) => ({
+                applicants: state.applicants.map(app => app._id === id ? { ...app, status: res.data.application.status } : app),
+                loading: false
+            }));
+
+            return { success: true, application: res.data.application }
         } catch (error) {
             const errorMsg = error.response?.data?.message || error.message;
             set({error:errorMsg,loading:false})

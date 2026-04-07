@@ -51,9 +51,9 @@ export  const updatestatus = async(req,res) =>{
     try {
         const {id}=req.params;
         const {status} =req.body;
-        const application = await Application.findById({id})
+        const application = await Application.findById(id)
         if(!application){
-            res.status(404).json({message:"Application not found"})
+            return res.status(404).json({message:"Application not found"})
         }
         application.status = status;
         await application.save();
