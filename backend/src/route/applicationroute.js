@@ -10,5 +10,5 @@ const router = express.Router();
 router.post("/apply", protectedroute,protectrole("jobseeker"),upload.single("resume"),applyforjob);
 router.get("/my",protectedroute ,protectrole("jobseeker"),getmyapplications);
 router.put("/update/:id/status",protectedroute,protectrole("recruiter"),updatestatus);  
-router.get("/getapplicantbyjob/:id",protectedroute,protectrole("recruiter"),getApplicantsByJob)
+router.get("/getapplicantbyjob/:jobId",protectedroute,protectrole("recruiter"),getApplicantsByJob)
 export default router;
