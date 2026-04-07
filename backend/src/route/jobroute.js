@@ -11,5 +11,5 @@ router.get("/getbyid/:id",protectedroute,protectrole("recruiter","jobseeker"),ge
 router.delete("/deletejob/:id",protectedroute,protectrole("recruiter"),deletejob)
 router.get("/filter",protectedroute,protectrole("recruiter","jobseeker"),jobfilter)
 router.get("/getjobbyrecruiter/:id",protectedroute,protectrole("recruiter"),getjobbyrecruiter)
-
+router.get("/getjobbyrecruiter/:id",protectedroute,protectrole("recruiter"),getjobbyrecruiter)
 export default router;

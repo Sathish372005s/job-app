@@ -76,7 +76,6 @@ export const getApplicantsByJob = async (req, res) => {
     if (applications.length === 0) {
       return res.status(404).json({ message: "No applicants found" });
     }
-
     return res.status(200).json({ applications });
   } catch (error) {
     console.log("Error:", error);
