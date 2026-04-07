@@ -54,5 +54,17 @@ export const useRecruiterStore = create((set)=>({
             set({error:errorMsg,loading:false})
             return {success:false,error:errorMsg}
         }
+    },
+    getapplicantbyjob:async(jobid)=>{
+        try {
+            set({loading:true,error:null})
+            const res=await api.get(`/application/getapplicantbyjob/${jobid}`)
+            set({loading:false})
+            return {success:true,applicants:res.data.applicants}
+        } catch (error) {
+            const errorMsg = error.response?.data?.message || error.message;
+            set({error:errorMsg,loading:false})
+            return {success:false,error:errorMsg}
+        }
     }
 }))

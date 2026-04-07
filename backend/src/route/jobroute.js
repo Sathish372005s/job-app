@@ -1,5 +1,5 @@
 import express from "express";
-import {createjob,getjobbyid,grtalljobs,deletejob,jobfilter,getjobbyrecruiter} from "../controller/jobcontroller.js";
+import {createjob,getjobbyid,grtalljobs,deletejob,jobfilter,getjobbyrecruiter,getapplicantbyjob} from "../controller/jobcontroller.js";
 import { protectedroute } from "../middleware/auth.middleware.js";
 import { protectrole } from "../middleware/role.middleware.js";
 
@@ -11,5 +11,5 @@ router.get("/getbyid/:id",protectedroute,protectrole("recruiter","jobseeker"),ge
 router.delete("/deletejob/:id",protectedroute,protectrole("recruiter"),deletejob)
 router.get("/filter",protectedroute,protectrole("recruiter","jobseeker"),jobfilter)
 router.get("/getjobbyrecruiter/:id",protectedroute,protectrole("recruiter"),getjobbyrecruiter)
-router.get("/getjobbyrecruiter/:id",protectedroute,protectrole("recruiter"),getjobbyrecruiter)
+router.get("/getapplicantbyjob/:id",protectedroute,protectrole("recruiter"),getapplicantbyjob)
 export default router;
