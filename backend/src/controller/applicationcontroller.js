@@ -1,7 +1,14 @@
 import Application from "../models/application.js";
-
 import Job from "../models/job.js";
+import nodemailer from "nodemailer";
 
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+});
 export const applyforjob = async(req,res) => {
     try {
         const { jobId } = req.body;
@@ -52,11 +59,28 @@ export  const updatestatus = async(req,res) =>{
         const {id}=req.params;
         const {status} =req.body;
         const application = await Application.findById(id)
+            .populate("applicant", "name email")
+            .populate("job", "title");
+
         if(!application){
             return res.status(404).json({message:"Application not found"})
         }
         application.status = status;
         await application.save();
+
+        if (application.applicant && application.applicant.email) {
+            try {
+                await transporter.sendMail({
+                    from: process.env.EMAIL_USER,
+                    to: application.applicant.email,
+                    subject: `Application ${status}`,
+                    text: `Hi ${application.applicant.name},\n\nYour application for ${application.job.title} has been ${status}.\n\nThank you.`,
+                });
+            } catch (mailError) {
+                console.log("Error sending email:", mailError);
+            }
+        }
+
         return res.status(200).json({message:"Application status updated successfully",application})
     } 
     catch (error) {
