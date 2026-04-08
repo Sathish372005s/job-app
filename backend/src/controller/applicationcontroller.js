@@ -1,20 +1,26 @@
 import Application from "../models/application.js";
 import Job from "../models/job.js";
 import nodemailer from "nodemailer";
+const dotenv = await import("dotenv");
+dotenv.config();
 
 let transporter;
 const getTransporter = () => {
-    if (!transporter) {
+    if (transporter) {
+        return transporter;
+    }else{
         transporter = nodemailer.createTransport({
-            service: "gmail",
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false,
             auth: {
                 user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS
+                pass: process.env.EMAIL_PASS,
             }
         });
-    }
-    return transporter;
-};
+        return transporter;
+    };
+}
 export const applyforjob = async(req,res) => {
     try {
         const { jobId } = req.body;
