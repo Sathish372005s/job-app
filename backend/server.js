@@ -5,10 +5,14 @@ import { connectToDatabase } from "./src/utils/dbutils.js";
 import authroute from './src/route/authroute.js'
 import jobroute from './src/route/jobroute.js'
 import appl from './src/route/applicationroute.js'
+import cors from 'cors';
 
 dotenv.config();
 
 const app = express();
+app.use(cors({
+  origin: '*'
+}));
 app.use(express.json());
 
 app.use("/api/auth", authroute);
