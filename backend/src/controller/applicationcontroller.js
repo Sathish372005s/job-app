@@ -2,13 +2,19 @@ import Application from "../models/application.js";
 import Job from "../models/job.js";
 import nodemailer from "nodemailer";
 
-const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+let transporter;
+const getTransporter = () => {
+    if (!transporter) {
+        transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS
+            }
+        });
     }
-});
+    return transporter;
+};
 export const applyforjob = async(req,res) => {
     try {
         const { jobId } = req.body;
@@ -70,7 +76,7 @@ export  const updatestatus = async(req,res) =>{
 
         if (application.applicant && application.applicant.email) {
             try {
-                await transporter.sendMail({
+                await getTransporter().sendMail({
                     from: process.env.EMAIL_USER,
                     to: application.applicant.email,
                     subject: `Application ${status}`,

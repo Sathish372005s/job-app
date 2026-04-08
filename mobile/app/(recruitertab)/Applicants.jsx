@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, KeyboardAvoidingView, Platform, FlatList } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native'
 import React from 'react'
 import { useRecruiterStore } from '../store/recruiterstore'
 import { useEffect, useState } from 'react'
@@ -53,63 +53,59 @@ const Applicants = () => {
          behavior={Platform.OS === "ios" ? "padding" : "height"}
          keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
        >
-        <View style={styles.main}>
-          <FlatList
-            data={myjobs}
-            contentContainerStyle={{ paddingBottom: 20 }}
-            renderItem ={({item,index})=>{
-              const isExpanded = activeJobId === item._id;
-              return (
-                <View style={styles.card}>
-                  <Text style={styles.texts}>{item.title}</Text>
-                  
-                  <TouchableOpacity 
-                    style={styles.button}
-                    onPress={async()=>{
-                      if (isExpanded) {
-                        setActiveJobId(null);
-                      } else {
-                        setActiveJobId(item._id);
-                        await getapplicantbyjob(item._id);
-                      }
-                    }}
-                  >
-                    <Text style={styles.buttonText}>{isExpanded ? 'Hide Applicants' : 'View Applicants'}</Text>
-                  </TouchableOpacity>
+        <ScrollView style={styles.main} contentContainerStyle={{ paddingBottom: 20 }}>
+          {myjobs && myjobs.map((item, index) => {
+            const isExpanded = activeJobId === item._id;
+            return (
+              <View key={item._id} style={styles.card}>
+                <Text style={styles.texts}>{item.title}</Text>
+                
+                <TouchableOpacity 
+                  style={styles.button}
+                  onPress={async()=>{
+                    if (isExpanded) {
+                      setActiveJobId(null);
+                    } else {
+                      setActiveJobId(item._id);
+                      await getapplicantbyjob(item._id);
+                    }
+                  }}
+                >
+                  <Text style={styles.buttonText}>{isExpanded ? 'Hide Applicants' : 'View Applicants'}</Text>
+                </TouchableOpacity>
 
-                  {isExpanded && (
-                    <View style={styles.applicantsContainer}>
-                      {applicants && applicants.length > 0 ? (
-                        applicants.map((app) => (
-                          <View key={app._id} style={styles.applicantCard}>
-                            <Text style={styles.applicantName}>{app.applicant?.name || "Unknown Name"}</Text>
-                            <Text style={styles.applicantEmail}>{app.applicant?.email || "Unknown Email"}</Text>
-                            <Text style={[styles.applicantStatus, app.status === 'rejected' && {color: COLORS.error}]}>Status: {app.status}</Text>
-                            
-                            <View style={styles.actionRow}>
-                              <TouchableOpacity style={[styles.actionBtn, styles.acceptBtn]} onPress={() => handleStatusUpdate(app._id, 'accepted')}>
-                                <Text style={styles.actionBtnText}>Accept</Text>
-                              </TouchableOpacity>
-                              <TouchableOpacity style={[styles.actionBtn, styles.rejectBtn]} onPress={() => handleStatusUpdate(app._id, 'rejected')}>
-                                <Text style={styles.actionBtnText}>Reject</Text>
-                              </TouchableOpacity>
-                            </View>
-
-                            <TouchableOpacity style={styles.button} onPress={openResume.bind(null, app.resume)}>
-                              <Text style={styles.buttonText}>download Resume</Text>
+                {isExpanded && (
+                  <View style={styles.applicantsContainer}>
+                    {applicants && applicants.length > 0 ? (
+                      applicants.map((app) => (
+                        <View key={app._id} style={styles.applicantCard}>
+                          <Text style={styles.applicantName}>{app.applicant?.name || "Unknown Name"}</Text>
+                          <Text style={styles.applicantEmail}>{app.applicant?.email || "Unknown Email"}</Text>
+                          <Text style={[styles.applicantStatus, app.status === 'rejected' && {color: COLORS.error}]}>Status: {app.status}</Text>
+                          
+                          <View style={styles.actionRow}>
+                            <TouchableOpacity style={[styles.actionBtn, styles.acceptBtn]} onPress={() => handleStatusUpdate(app._id, 'accepted')}>
+                              <Text style={styles.actionBtnText}>Accept</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={[styles.actionBtn, styles.rejectBtn]} onPress={() => handleStatusUpdate(app._id, 'rejected')}>
+                              <Text style={styles.actionBtnText}>Reject</Text>
                             </TouchableOpacity>
                           </View>
-                        ))
-                      ) : (
-                        <Text style={styles.noApplicants}>No applicants yet.</Text>
-                      )}
-                    </View>
-                  )}
-                </View>
-              )
-            }}
-          />
-        </View>
+
+                          <TouchableOpacity style={styles.button} onPress={openResume.bind(null, app.resume)}>
+                            <Text style={styles.buttonText}>download Resume</Text>
+                          </TouchableOpacity>
+                        </View>
+                      ))
+                    ) : (
+                      <Text style={styles.noApplicants}>No applicants yet.</Text>
+                    )}
+                  </View>
+                )}
+              </View>
+            )
+          })}
+        </ScrollView>
        </KeyboardAvoidingView>
   )
 }
