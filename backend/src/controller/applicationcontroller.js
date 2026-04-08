@@ -1,7 +1,7 @@
 import Application from "../models/application.js";
 import Job from "../models/job.js";
 import nodemailer from "nodemailer";
-const dotenv = await import("dotenv");
+import dotenv from "dotenv";
 dotenv.config();
 
 let transporter;
@@ -79,7 +79,7 @@ export  const updatestatus = async(req,res) =>{
         }
         application.status = status;
         await application.save();
-
+        console.log("Transporter:", transporter);
         if (application.applicant && application.applicant.email) {
             try {
                 await getTransporter().sendMail({
